@@ -1,4 +1,4 @@
-obj-m += packet.o
+obj-m += net_helper.o
 
 all:
 	make -C /lib/modules/$(KERN)/build M=$(PWD) modules
