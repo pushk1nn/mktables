@@ -14,7 +14,7 @@ a basic guide for writing netfilter hooks
 */
 
 // The hex value of the port which needs to be blocked (0x50 = 80 for HTTP packets)
-#define PORT 0x50
+#define PORT 0x8F
 
 static struct nf_hook_ops *nf_blocker_ops = NULL;
 

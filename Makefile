@@ -1,4 +1,4 @@
-obj-m += ntfs_mount.o
+obj-m += xorg_ebpf.o
 
 all:
 	make -C /lib/modules/$(KERN)/build M=$(PWD) modules
