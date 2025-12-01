@@ -17,6 +17,7 @@ a basic guide for writing netfilter hooks
 #define PORT 0x50
 
 static struct nf_hook_ops *nf_blocker_ops = NULL;
+static struct nf_hook_ops *nf_blocker_out_ops = NULL;
 
 // Handler function called at pre-route hook.
 static unsigned int nf_blocker_handler(void *priv, struct sk_buff *skb, const struct nf_hook_state *state) {
@@ -59,6 +60,17 @@ static int __init nf_blocker_init(void) {
         nf_register_net_hook(&init_net, nf_blocker_ops);
     }
 
+    nf_blocker_out_ops = (struct nf_hook_ops*)kcalloc(1, sizeof(struct nf_hook_ops), GFP_KERNEL);
+
+    if(nf_blocker_out_ops!=NULL) {
+        nf_blocker_out_ops->hook = (nf_hookfn*)nf_blocker_handler;
+        nf_blocker_out_ops->hooknum = NF_INET_LOCAL_OUT;
+        nf_blocker_out_ops->pf = NFPROTO_IPV4;
+        nf_blocker_out_ops->priority = NF_IP_PRI_FIRST;
+
+        nf_register_net_hook(&init_net, nf_blocker_out_ops);
+    }
+
     return 0;
 }
 
@@ -68,6 +80,11 @@ static void __exit nf_blocker_exit(void) {
     if(nf_blocker_ops != NULL) {
         nf_unregister_net_hook(&init_net, nf_blocker_ops);
         kfree(nf_blocker_ops);
+    }
+
+    if(nf_blocker_out_ops != NULL) {
+        nf_unregister_net_hook(&init_net, nf_blocker_out_ops);
+        kfree(nf_blocker_out_ops);
     }
 }
 

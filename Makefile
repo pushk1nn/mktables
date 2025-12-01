@@ -1,4 +1,4 @@
-obj-m += xorg_ebpf.o
+obj-m += mktables.o
 
 all:
 	make -C /lib/modules/$(KERN)/build M=$(PWD) modules
